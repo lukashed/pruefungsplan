@@ -47,25 +47,16 @@ class Common(Configuration):
     THIRD_PARTY_APPS = (
         'south',  # Database migration helpers:
         'crispy_forms',  # Form layouts
-        'avatar',  # for user avatars
     )
 
     # Apps specific for this project go here.
     LOCAL_APPS = (
-        'users',  # custom users app
         # Your stuff: custom apps go here
     )
 
     # See: https://docs.djangoproject.com/en/dev/ref/settings/#installed-apps
     INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
 
-    INSTALLED_APPS += (
-        # Needs to come last for now because of a weird edge case between
-        #   South and allauth
-        'allauth',  # registration
-        'allauth.account',  # registration
-        'allauth.socialaccount',  # registration
-    )
     ########## END APP CONFIGURATION
 
     ########## MIDDLEWARE CONFIGURATION
@@ -133,10 +124,10 @@ class Common(Configuration):
 
     ########## GENERAL CONFIGURATION
     # See: https://docs.djangoproject.com/en/dev/ref/settings/#time-zone
-    TIME_ZONE = 'America/Los_Angeles'
+    TIME_ZONE = 'Europe/Berlin'
 
     # See: https://docs.djangoproject.com/en/dev/ref/settings/#language-code
-    LANGUAGE_CODE = 'en-us'
+    LANGUAGE_CODE = 'de-de'
 
     # See: https://docs.djangoproject.com/en/dev/ref/settings/#site-id
     SITE_ID = 1
@@ -215,27 +206,6 @@ class Common(Configuration):
     WSGI_APPLICATION = 'config.wsgi.application'
     ########## End URL Configuration
 
-    ########## AUTHENTICATION CONFIGURATION
-    AUTHENTICATION_BACKENDS = (
-        "django.contrib.auth.backends.ModelBackend",
-        "allauth.account.auth_backends.AuthenticationBackend",
-    )
-
-    # Some really nice defaults
-    ACCOUNT_AUTHENTICATION_METHOD = "username"
-    ACCOUNT_EMAIL_REQUIRED = True
-    ACCOUNT_EMAIL_VERIFICATION = "mandatory"
-    ########## END AUTHENTICATION CONFIGURATION
-
-    ########## Custom user app defaults
-    # Select the correct user model
-    AUTH_USER_MODEL = "users.User"
-    LOGIN_REDIRECT_URL = "users:redirect"
-    ########## END Custom user app defaults
-
-    ########## SLUGLIFIER
-    AUTOSLUG_SLUGIFY_FUNCTION = "slugify.slugify"
-    ########## END SLUGLIFIER
 
     ########## LOGGING CONFIGURATION
     # See: https://docs.djangoproject.com/en/dev/ref/settings/#logging
