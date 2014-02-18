@@ -51,7 +51,7 @@ class Common(Configuration):
 
     # Apps specific for this project go here.
     LOCAL_APPS = (
-        # Your stuff: custom apps go here
+        'notifier',
     )
 
     # See: https://docs.djangoproject.com/en/dev/ref/settings/#installed-apps
