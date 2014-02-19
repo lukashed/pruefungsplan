@@ -13,15 +13,10 @@
     <![endif]-->
 
     {% block css %}
-    <!-- Latest compiled and minified CSS -->
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css">
 
-    <!-- Optional theme -->
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap-theme.min.css">
 
-    <!-- Your stuff: Third-party css libraries go here -->
-
-    <!-- This file store project specific CSS -->
     <link href="{% static 'css/project.css' %}" rel="stylesheet">
     {% endblock %}
 
@@ -35,10 +30,10 @@
 
     <div class="header navbar">
       <div class="container">
-        <a class="navbar-brand" href="/">pruefungsplan</a>
+        <a class="navbar-brand" href="{% url 'home' %}">pruefungsplan</a>
         <ul class="nav navbar-nav">
-          <li class="active"><a href="{% url 'home' %}">Home</a></li>
-          <li><a href="{% url 'about' %}">About</a></li>
+          <li><a href="{% url 'about' %}">Infos</a></li>
+          <li><a href="{% url 'imprint' %}">Impressum</a></li>
         </ul>
       </div>
     </div>

@@ -1,1 +1,31 @@
 {% extends "base.html" %}
+
+{% block content %}
+<h1>Ueber die Pruefungsplanbenachrichtigungen</h1>
+<h4>Warum hast du das gemacht?</h4>
+<p>Weil ich gerne wissen moechte, wann ich die Fluege fuer den Urlaub buchen kann.</p>
+
+<h4>Wie funktioniert das?</h4>
+<p>Du kannst dir den <a href="https://github.com/lukashed/pruefungsplan" target="_blank">Code auf GitHub angucken</a>.</p>
+
+<h4>Warum ist mein Studiengang XYZ nicht vertreten?</h4>
+<p>Die einfache Erklaerung: Ich studiere ITS und habe das Projekt eigentlich aus reinem Selbstnutzen erschaffen.
+    Wenn du moechtest kannst du aber natuerlich den Code erweitern und mir einen Pull-Request auf <a href="https://github.com/lukashed/pruefungsplan" target="_blank">GitHub</a> schicken.</p>
+
+<h4>Kostet das SMS-Versenden nicht Geld?</h4>
+<p>Ja. Deswegen koennt ihr mir hier gerne ein paar SMS spenden: <form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top">
+<input type="hidden" name="cmd" value="_donations">
+<input type="hidden" name="business" value="paypal@lukasklein.com">
+<input type="hidden" name="lc" value="DE">
+<input type="hidden" name="no_note" value="0">
+<input type="hidden" name="currency_code" value="EUR">
+<input type="hidden" name="bn" value="PP-DonationsBF:btn_donate_SM.gif:NonHostedGuest">
+<input type="image" src="https://www.paypalobjects.com/de_DE/DE/i/btn/btn_donate_SM.gif" border="0" name="submit" alt="Jetzt einfach, schnell und sicher online bezahlen – mit PayPal.">
+<img alt="" border="0" src="https://www.paypalobjects.com/en_US/i/scr/pixel.gif" width="1" height="1">
+</form>
+</p>
+
+
+<h4>Wie kann ich dich erreichen?</h4>
+<p>Am besten per Mail an <a href="mailto:lukas@lukasklein.com">lukas@lukasklein.com</a>.</p>
+{% endblock %}
