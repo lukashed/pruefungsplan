@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+<h1>Pruefungsplan Benachrichtigung</h1>
+<p>Du moechtest nicht verpassen wenn der Pruefungsplan fuer das neue Semester online geht? Ich auch nicht! Deswegen habe ich dieses kleine Tool geschrieben, das dich automatisch per Email und/oder SMS benachrichtigt.</p>
+
+{% crispy form %}
+
+{% endblock %}

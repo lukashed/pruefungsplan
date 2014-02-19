@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% block content %}
+{% if notification.done_confirming %}
+    <h1>Fertig</h1>
+    <p>Du wirst nun benachrichtigt, wenn der Pruefungsplan fuer {{ notification.pruefungsplan.name }} online ist.</p>
+{% else %}
+    <h1>Nur noch ein kleiner Schritt</h1>
+    <p>Um deinen Benachrichtigungswunsch zu aktivieren musst du noch folgende Dinge verifizieren:</p>
+
+    {% if not notification.email_verified %}
+        <h2>Deine E-Mail Adresse</h2>
+        <p>Klicke dazu auf den Link in der E-Mail, die wir an dich gesendet haben.</p>
+        {% if mail_error %}
+            <p>
+                <div class="alert alert-danger">Falscher Code.</div>
+            </p>
+        {% endif %}
+    {% endif %}
+
+    {% if notification.has_sms and not notification.sms_verified %}
+        <h2>Deine Handynummer</h2>
+        <p>Bitte gib den Bestaetigungscode ein, den wir dir per SMS geschickt haben.</p>
+        <form action="." method="GET" class="form-inline">
+            <input type="text" name="sms_code" maxlength="4" class="form-control" style="width: 20%;" placeholder="4-stelliger Verifizierungscode">
+            <input type="submit" class="btn" value="Verifizieren">
+            {% if sms_error %}
+                <p>
+                    <div class="alert alert-danger">Falscher Code.</div>
+                </p>
+            {% endif %}
+        </form>
+    {% endif %}
+{% endif %}
+{% endblock %}

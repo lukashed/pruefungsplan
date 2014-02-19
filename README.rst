@@ -31,6 +31,10 @@ DJANGO_SECURE_FRAME_DENY                SECURE_FRAME_DENY           n/a         
 DJANGO_SECURE_HSTS_INCLUDE_SUBDOMAINS   HSTS_INCLUDE_SUBDOMAINS     n/a                                            True
 DJANGO_SESSION_COOKIE_HTTPONLY          SESSION_COOKIE_HTTPONLY     n/a                                            True
 DJANGO_SESSION_COOKIE_SECURE            SESSION_COOKIE_SECURE       n/a                                            False
+DJANGO_MAILGUN_URL                      MAILGUN_URL                 n/a                                            raises error
+DJANGO_MAILGUN_API_KEY                  MAILGUN_API_KEY             n/a                                            raises error
+DJANGO_TWILIO_SID                       TWILIO_SID                  n/a                                            raises error
+DJANGO_TWILIO_AUTH_TOKEN                TWILIO_AUTH_TOKEN           n/a                                            raises error
 ======================================= =========================== ============================================== ===========================================
 
 * TODO: Add vendor-added settings in another table

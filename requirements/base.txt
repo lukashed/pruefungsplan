@@ -25,3 +25,4 @@ unicode-slugify==0.1.1
 django-autoslug==1.7.2
 
 requests==2.2.1
+twilio==3.6.5

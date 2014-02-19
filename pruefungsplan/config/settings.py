@@ -85,6 +85,17 @@ class Common(Configuration):
     SECRET_KEY = "CHANGEME!!!"
     ########## END SECRET CONFIGURATION
 
+    ########## MAILGUN CONFIGURATION
+    MAILGUN_URL = values.Value('')
+    MAILGUN_API_KEY = values.Value('')
+    ########## END MAILGUN CONFIGURATION
+
+    ########## TWILIO CONFIGURATION
+    TWILIO_SID = values.Value('')
+    TWILIO_AUTH_TOKEN = values.Value('')
+    TWILIO_FROM = '+13852826501'
+    ########## END TWILIO CONFIGURATION
+
     ########## FIXTURE CONFIGURATION
     # See: https://docs.djangoproject.com/en/dev/ref/settings/#std:setting-FIXTURE_DIRS
     FIXTURE_DIRS = (
