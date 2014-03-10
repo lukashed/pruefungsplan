@@ -6,7 +6,7 @@
     {% if notification.pruefungsplan %}
         <p>Du wirst nun benachrichtigt, wenn der Pruefungsplan fuer {{ notification.pruefungsplan.name }} online ist.</p>
     {% else %}
-        <p>Du wirst nun benachrichtigt, wenn die folgenden Klausuren verändert werden: {{ notification.exams|join:', ' }}</p>
+        <p>Du wirst nun benachrichtigt, wenn die folgenden Klausuren verändert werden: {{ notification.exams.all|join:', ' }}</p>
     {% endif %}
 {% else %}
     <h1>Nur noch ein kleiner Schritt</h1>
