@@ -1,9 +1,20 @@
+# coding=utf-8
+
 import requests
 import datetime
 import uuid
+from urlparse import urljoin
 from django.db import models
 from django.conf import settings
+from django.dispatch import receiver
+from django.db.models.signals import post_save
+from lxml import html
 from .utils import send_email, send_sms
+
+
+
+PRUEFUNGSPLAN = 1
+EXAM = 2
 
 
 class Pruefungsplan(models.Model):
@@ -27,14 +38,99 @@ class Pruefungsplan(models.Model):
                 self.available_since = datetime.datetime.now()
                 self.save()
                 for notification in self.notifications.all():
-                    notification.send_notification()
+                    notification.send_notification(kind=PRUEFUNGSPLAN)
+        else:
+            Exam.fetch_exams(self)
+
+
+MONTH_TO_NUMBER = {
+    'Januar': 1,
+    'Februar': 2,
+    'März': 3,
+    'April': 4,
+    'Mai': 5,
+    'Juni': 6,
+    'Juli': 7,
+    'August': 8,
+    'September': 9,
+    'Oktober': 10,
+    'November': 11,
+    'Dezember': 12,
+}
+
+class Exam(models.Model):
+    pruefungsplan = models.ForeignKey(
+        Pruefungsplan,
+        related_name='exams',
+    )
+
+    name = models.CharField(max_length=255)
+    url = models.URLField()
+    date = models.DateField()
+
+    def __unicode__(self):
+        return '%s on %s (%s)' % (
+            self.name,
+            self.date.strftime('%d.%m.%y'),
+            self.pruefungsplan,
+        )
+
+    @classmethod
+    def fetch_exams(cls, pruefungsplan):
+        r = requests.get(pruefungsplan.url)
+
+        tree = html.fromstring(r.text)
+
+        dates = tree.xpath('//td[contains(@class, "filled")]')
+        for date in dates:
+            day = int(date.xpath('h1/text()')[0])
+            table = date.getparent().getparent()
+            monthyear = table.xpath('caption/text()')[0]
+            month_verbose, year = monthyear.split(' ')
+            month = MONTH_TO_NUMBER[month_verbose]
+
+            date_python = datetime.date(year=int(year), month=month, day=day)
+
+            exams = date.xpath('ul/li/a')
+
+            for exam in exams:
+                url = urljoin(
+                    pruefungsplan.url,
+                    exam.get('href').encode('utf-8')
+                )
+                name = exam.text.encode('utf-8')
+
+
+                try:
+                    exam = cls.objects.get(
+                        pruefungsplan=pruefungsplan,
+                        name=name,
+                        url=url,
+                    )
+                    exam.date = date_python
+                    exam.save()
+                except cls.DoesNotExist:
+                    exam = cls.objects.create(
+                        pruefungsplan=pruefungsplan,
+                        name=name,
+                        url=url,
+                        date=date_python,
+                    )
 
 
 
 class Notification(models.Model):
     pruefungsplan = models.ForeignKey(
         Pruefungsplan,
-        related_name='notifications'
+        related_name='notifications',
+        blank=True,
+        null=True,
+    )
+
+    exams = models.ManyToManyField(
+        Exam,
+        related_name='notifications',
+        blank=True,
     )
 
     email = models.EmailField()
@@ -67,22 +163,46 @@ class Notification(models.Model):
     def __unicode__(self):
         return '%s for %s' % (self.email, self.pruefungsplan)
 
-    def send_notification(self):
+    def send_notification(self, kind, instance=None):
+        if kind == PRUEFUNGSPLAN:
+            email_subject = 'Pruefungsplan %s ist online!' % (
+                self.pruefungsplan.name,
+            )
+            email_message = 'Der Pruefungsplan %s ist online: %s' % (
+                self.pruefungsplan.name,
+                self.pruefungsplan.url
+            )
+            sms_message = 'Pruefungsplan %s ist online!' % (
+                self.pruefungsplan.name,
+            )
+        elif kind == EXAM:
+            email_subject = 'Datum der Klausur %s geaendert' % instance.name
+            email_message = 'Das Datum der Klausur %s im Pruefungsplan %s \
+wurde auf den %s geaendert! Details: %s' % (
+    instance.name,
+    instance.pruefungsplan.name,
+    instance.date.strftime('%d.%m.%y'),
+    instance.url
+)
+            sms_message = 'Datum der Klausur %s wurde auf den %s geaendert' % (
+                instance.name,
+                instance.date.strftime('%d.%m.%y'),
+            )
+
         if self.email_verified:
             send_email(
                 receipient=self.email,
-                subject='Pruefungsplan %s ist online!' % (
-                    self.pruefungsplan.name,
-                ),
-                message='Der Pruefungsplan %s ist online: %s' % (
-                    self.pruefungsplan.name,
-                    self.pruefungsplan.url
-                ),
+                subject=email_subject,
+                message=email_message,
             )
         if self.sms_verified:
             send_sms(
                 to=self.sms,
-                message='Pruefungsplan %s ist online!' % (
-                    self.pruefungsplan.name,
-                ),
+                message=sms_message,
             )
+
+
+@receiver(post_save, sender=Exam)
+def notify_exams(sender, instance, created, *args, **kwargs):
+    for notification in instance.notifications.all():
+        notification.send_notification(kind=EXAM, instance=instance)

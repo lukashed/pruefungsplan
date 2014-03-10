@@ -11,13 +11,16 @@ from django.contrib import admin
 admin.autodiscover()
 
 
-from notifier.views import SignUpView, confirm
+from notifier.views import ExamSignUpView, SignUpView, confirm
 
 
 urlpatterns = patterns('',
     url(r'^$',
-        SignUpView.as_view(),
+        ExamSignUpView.as_view(),
         name="home"),
+    url(r'^pruefungsplan/$',
+        SignUpView.as_view(),
+        name="pruefungsplan"),
     url(r'^confirm/(?P<password>[a-f0-9]{10})/$', confirm),
     url(r'^about/$',
         TemplateView.as_view(template_name='pages/about.html'),

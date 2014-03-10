@@ -26,3 +26,4 @@ django-autoslug==1.7.2
 
 requests==2.2.1
 twilio==3.6.5
+lxml==3.3.3

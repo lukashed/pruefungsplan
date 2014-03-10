@@ -1,12 +1,44 @@
 from django.shortcuts import render_to_response, get_object_or_404
 from django.template import RequestContext
 from django.views.generic.edit import FormView
-from .forms import SignUpForm
+from .forms import SignUpForm, ExamSignUpForm
 from .models import Notification
 from .utils import send_email, send_sms
 
 
+class ExamSignUpView(FormView):
+    kind = 'exam'
+    form_class = ExamSignUpForm
+    template_name = 'home.html'
+
+    def form_valid(self, form):
+        notification, sms = form.draft_notification()
+
+        if sms:
+            send_sms(
+                sms,
+                'Dein Code fuer die Pruefungsplanbenachrichtigung \
+                lautet: %s' % (notification.sms_code)
+            )
+
+        send_email(
+            notification.email,
+            'Bitte bestaetige deine Pruefungsplanbenachrichtigung',
+            'Wenn du per Email benachrichtigt werden moechtest, \
+            klicke bitte auf den folgenden Link: %s' % (
+                self.request.build_absolute_uri('/confirm/%s/?mail_code=%s' % (
+                    notification.password,
+                    notification.email_token
+                ))
+            )
+        )
+
+        self.success_url = '/confirm/%s' % notification.password
+        return super(ExamSignUpView, self).form_valid(form)
+
+
 class SignUpView(FormView):
+    kind = 'pruefungsplan'
     form_class = SignUpForm
     template_name = 'home.html'
 

@@ -7,6 +7,6 @@ class Command(BaseCommand):
     help = 'Updates the pruefungsplans and sends out notifications'
 
     def handle(self, *args, **options):
-        for pruefungsplan in Pruefungsplan.objects.filter(is_available=False):
+        for pruefungsplan in Pruefungsplan.objects.filter():
             self.stdout.write('Updating %s...' % pruefungsplan.name)
             pruefungsplan.update()

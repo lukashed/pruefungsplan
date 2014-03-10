@@ -3,8 +3,22 @@
 
 {% block content %}
 <h1>Pruefungsplan Benachrichtigung</h1>
-<p>Du moechtest nicht verpassen wenn der Pruefungsplan fuer das neue Semester online geht? Ich auch nicht! Deswegen habe ich dieses kleine Tool geschrieben, das dich automatisch per Email und/oder SMS benachrichtigt.</p>
+<p>Du moechtest nicht verpassen wenn der Pruefungsplan fuer das neue Semester online geht? <i><strong>Neu:</strong> Du möchtest nicht verpassen, wenn eine Klausur auf ein anderes Datum verlegt wurde?</i> Ich auch nicht! Deswegen habe ich dieses kleine Tool geschrieben, das dich automatisch per Email und/oder SMS benachrichtigt.</p>
 
-{% crispy form %}
+<ul class="nav nav-tabs">
+  <li{% if view.kind == 'exam' %} class="active"{% endif %}><a href="{% url 'home' %}">Klausurdatum Änderung</a></li>
+  <li{% if view.kind == 'pruefungsplan' %} class="active"{% endif %}><a href="{% url 'pruefungsplan' %}">Prüfungsplan verfügbar</a></li>
+</ul>
+
+{% if view.kind == 'exam' %}
+    {% comment %}Don't use crispy since it ignores our custom widget{% endcomment %}
+    <form action="{% url 'home' %}" method="POST">
+        {% csrf_token %}
+        {{ form }}
+        <p><input type="submit" name="save_changes" value="Benachrichtige mich" class="btn btn-primary btn-primary" id="submit-id-save_changes"></p>
+    </form>
+{% else %}
+    {% crispy form %}
+{% endif %}
 
 {% endblock %}

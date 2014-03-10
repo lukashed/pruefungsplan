@@ -3,7 +3,11 @@
 {% block content %}
 {% if notification.done_confirming %}
     <h1>Fertig</h1>
-    <p>Du wirst nun benachrichtigt, wenn der Pruefungsplan fuer {{ notification.pruefungsplan.name }} online ist.</p>
+    {% if notification.pruefungsplan %}
+        <p>Du wirst nun benachrichtigt, wenn der Pruefungsplan fuer {{ notification.pruefungsplan.name }} online ist.</p>
+    {% else %}
+        <p>Du wirst nun benachrichtigt, wenn die folgenden Klausuren verändert werden: {{ notification.exams|join:', ' }}</p>
+    {% endif %}
 {% else %}
     <h1>Nur noch ein kleiner Schritt</h1>
     <p>Um deinen Benachrichtigungswunsch zu aktivieren musst du noch folgende Dinge verifizieren:</p>
