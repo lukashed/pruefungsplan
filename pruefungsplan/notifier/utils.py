@@ -67,7 +67,7 @@ class ExamsByPruefungsplan(forms.CheckboxSelectMultiple):
                 self.choices.append((exam.id, exam.name))
             for i, (option_value, option_label) in enumerate(chain(self.choices, choices)):
                 if has_id:
-                    final_attrs = dict(final_attrs, id='%s_%s' % (attrs['id'], i))
+                    final_attrs = dict(final_attrs, id='%s_%s_%s' % (attrs['id'], pruefungsplan.pk, i))
                     label_for = u' for="%s"' % final_attrs['id']
                 else:
                     label_for = ''
