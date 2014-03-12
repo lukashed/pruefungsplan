@@ -5,9 +5,6 @@ import datetime
 import uuid
 from urlparse import urljoin
 from django.db import models
-from django.conf import settings
-from django.dispatch import receiver
-from django.db.models.signals import post_save
 from lxml import html
 from .utils import send_email, send_sms
 
@@ -117,6 +114,14 @@ class Exam(models.Model):
                         date=date_python,
                     )
 
+    def save(self, *args, **kwargs):
+        if self.pk is not None:
+            orig = self.__class__.objects.get(pk=self.pk)
+            if orig.date != self.date:
+                for notification in self.notifications.all():
+                    notification.send_notification(kind=EXAM, instance=self)
+
+        return super(Exam, self).save(*args, **kwargs)
 
 
 class Notification(models.Model):
@@ -200,9 +205,3 @@ wurde auf den %s geaendert! Details: %s' % (
                 to=self.sms,
                 message=sms_message,
             )
-
-
-@receiver(post_save, sender=Exam)
-def notify_exams(sender, instance, created, *args, **kwargs):
-    for notification in instance.notifications.all():
-        notification.send_notification(kind=EXAM, instance=instance)
